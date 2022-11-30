@@ -1,0 +1,10 @@
+/data
+/work_dirs
+/src/__pycache__
+/src/datasets/__pycache__
+/src/datasets/piplines/__pycache__
+/src/models/__pycache__
+/src/models/backbones/__pycache__
+/src/models/backbones/checkpoints/pvt.pth
+/src/models/segmentors/__pycache__
+/utils/__pycache__
