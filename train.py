@@ -30,9 +30,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train a segmentor')
 
     parser.add_argument('--syncbn', default=False, type=bool)
-    # TODO ema-related codes has been added in "ema.py", to check for correctness and add it into trainning process
+    # TODO: ema-related codes has been added in "ema.py", to check for screencorrectness and add it into trainning process
     parser.add_argument('--ema', default=False, type=bool)
-    # TODO amp-related codes has been added in "train_utils.py", to check for correctness
+    # TODO: amp-related codes has been added in "train_utils.py", to check for correctness
     parser.add_argument('--amp', default=True, type=bool)
 
     # seed config
@@ -55,7 +55,7 @@ def parse_args():
     # train & val config
     parser.add_argument('--epochs', default=100)
 
-    parser.add_argument('--batch-size', default=4)
+    parser.add_argument('--batch-size', default=6)
     parser.add_argument('--nw', default=8)
 
     parser.add_argument('--interval', default=5, help='the interval for validation and saving checkpoint')
@@ -250,6 +250,10 @@ def main():
 
     logger.info(f'Start Training Workflow Running, max {args.epochs} epochs')
     logger.info(f'Checkpoints will be saved to {args.work_dir}')
+
+    if args.amp:
+        logger.info("Using AMP training mode")
+
     for epoch in range(start_epoch, args.epochs):
         if args.distributed:
             sampler_train.set_epoch(epoch)
