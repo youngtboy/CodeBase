@@ -45,7 +45,7 @@ def parse_args():
     parser.add_argument('--depth-dir', default='Depth')
     parser.add_argument('--ann_dir', default='GT')
 
-    parser.add_argument('--work-dir', default="./work_dirs/dist_drop", help='the dir to save logs and models')
+    parser.add_argument('--work-dir', default="./work_dirs/qunuan", help='the dir to save logs and models')
 
     # device config
     parser.add_argument('--device', default='cuda')

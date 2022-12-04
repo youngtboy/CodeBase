@@ -8,3 +8,4 @@
 /src/models/backbones/checkpoints/pvt.pth
 /src/models/segmentors/__pycache__
 /utils/__pycache__
+/.idea
