@@ -3,6 +3,7 @@ from tqdm import tqdm
 import torch.nn.functional as F
 import time
 from utils.misc import reduce_tensor, get_rank 
+from torch.cuda.amp import autocast, GradScaler
 
 
 def train_one_epoch(args,
@@ -41,18 +42,34 @@ def train_one_epoch(args,
         if args.local_rank == 0:
             tb.add_scalar("LR", optimizer.param_groups[0]["lr"], _iter)
 
-        out = model(img, depth)
-        out = F.interpolate(out, size=gt.size()[-2:], mode="bilinear", align_corners=False)
+        if args.amp:
+            grad_scaler = GradScaler()
 
-        loss = criterion(out, gt)
+            with autocast(dtype=torch.float16):
 
-        reduce_tensor(loss, average=True)
+                out = model(img, depth)
+                out = F.interpolate(out, size=gt.size()[-2:], mode="bilinear", align_corners=False)
+                loss = criterion(out, gt)
+                reduce_tensor(loss, average=True)
 
-        loss.backward()
+            optimizer.zero_grad()
+            
+            grad_scaler.scale(loss).backward()
+            grad_scaler.step(optimizer)
+            grad_scaler.update()
 
-        optimizer.step()
+        else:
+            out = model(img, depth)
+            out = F.interpolate(out, size=gt.size()[-2:], mode="bilinear", align_corners=False)
 
-        optimizer.zero_grad()
+            loss = criterion(out, gt)
+
+            reduce_tensor(loss, average=True)
+
+            loss.backward()
+
+            optimizer.step()
+            optimizer.zero_grad()
 
         mean_epoch_loss = (mean_epoch_loss * _inner_iter + loss.detach()) / (_inner_iter + 1)
 
