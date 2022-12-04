@@ -30,10 +30,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train a segmentor')
 
     parser.add_argument('--syncbn', default=False, type=bool)
-    # TODO add ema-related codes, the mode is now unavailable
+    # TODO ema-related codes has been added in "ema.py", to check for correctness and add it into trainning process
     parser.add_argument('--ema', default=False, type=bool)
-    # TODO add amp-related codes, the mode is now unavailable
-    parser.add_argument('--amp', default=False, type=bool)
+    # TODO amp-related codes has been added in "train_utils.py", to check for correctness
+    parser.add_argument('--amp', default=True, type=bool)
 
     # seed config
     parser.add_argument('--seed', type=int, default=None, help='random seed')
